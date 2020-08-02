@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 # Sample usage:
-# csvtoemails mydbrfile.csv
-# csvtoemails mydbrfile.csv bademails.txt
+# csvtoemails.py mydbrfile.csv
+# csvtoemails.py mydbrfile.csv bademails.txt
 
 from csv import reader
 from sys import argv
