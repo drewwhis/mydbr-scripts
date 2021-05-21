@@ -8,9 +8,9 @@ from csv import reader
 from sys import argv
 
 # Indices for emails on each row.
-PURCHASER_EMAIL_INDEX = 52
+PURCHASER_EMAIL_INDEX = 54
 PRIMARY_COACH_EMAIL_INDEX = 36
-SECONDARY_COACH_EMAIL_INDEX = 44
+SECONDARY_COACH_EMAIL_INDEX = 45
 
 # Format and add email to a given set.
 def add_formatted_email(email: str, emails: set):
