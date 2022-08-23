@@ -4,17 +4,18 @@
 # csvtoemails.py mydbrfile.csv
 # csvtoemails.py mydbrfile.csv bademails.txt
 
-from csv import reader
 from sys import argv
 
 # Indices for emails on each row.
-PURCHASER_EMAIL_INDEX = 55
-PRIMARY_COACH_EMAIL_INDEX = 37
-SECONDARY_COACH_EMAIL_INDEX = 46
+LEAD_COACH_MENTOR_1_PRIMARY=49-1
+LEAD_COACH_MENTOR_1_ALTERNATE=50-1
+LEAD_COACH_MENTOR_2_PRIMARY=62-1
+LEAD_COACH_MENTOR_2_ALTERNATE=63-1
+TEAM_ADMIN_PRIMARY=75-1
 
 # Format and add email to a given set.
 def add_formatted_email(email: str, emails: set):
-  formattedemail = email.lower().strip()
+  formattedemail = email.encode().replace(b'\x00', b'').decode('utf-8').lower().strip()
   if not formattedemail.isspace() and formattedemail != '':
     emails.add(formattedemail)
 
@@ -28,15 +29,16 @@ def main(csvfilepath: str, ignorefilepath:str = None):
 
   # Generate the set of emails in the csv from myDBR.
   emails = set()
-  with open(csvfilepath) as csvfile:
-    # Read all rows except the header
-    emailreader = reader(csvfile)
-    next(emailreader)
-
-    for row in emailreader:
-      add_formatted_email(row[PURCHASER_EMAIL_INDEX], emails)
-      add_formatted_email(row[PRIMARY_COACH_EMAIL_INDEX], emails)
-      add_formatted_email(row[SECONDARY_COACH_EMAIL_INDEX], emails)
+  with open(csvfilepath, 'rb') as csvfile:
+    lines = csvfile.readlines()[1:-1]
+    for line in lines:
+      line = line.decode('utf-8')
+      values = line.split('\t')
+      add_formatted_email(values[LEAD_COACH_MENTOR_1_PRIMARY], emails)
+      add_formatted_email(values[LEAD_COACH_MENTOR_1_ALTERNATE], emails)
+      add_formatted_email(values[LEAD_COACH_MENTOR_2_PRIMARY], emails)
+      add_formatted_email(values[LEAD_COACH_MENTOR_2_ALTERNATE], emails)
+      add_formatted_email(values[TEAM_ADMIN_PRIMARY], emails)
 
   # Generate the set of good emails
   goodemails = sorted(emails.difference(ignoreemails))
